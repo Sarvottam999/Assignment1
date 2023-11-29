@@ -19,14 +19,14 @@ import 'package:flutter/material.dart';
       children: <Widget>[
         Padding(
           padding:const   EdgeInsets.all(15.0),
-          child: Text(text, style:const  TextStyle(color: Colors.red, fontSize: 15),),
+          child: Text(text, style:const  TextStyle(color: Colors.black, fontSize: 18),),
         ),
        
         const Padding(padding: EdgeInsets.only(top: 50.0)),
         TextButton(onPressed: () {
           Navigator.of(context).pop();
         },
-            child:const  Text('OK!', style: TextStyle(color: Colors.purple, fontSize: 18.0),))
+            child:   Text('OK!', style: TextStyle(color: Color.fromARGB(255, 201, 0, 94), fontSize: 18.0),))
       ],
     ),
   ),

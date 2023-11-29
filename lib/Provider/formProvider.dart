@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:myapp/Auth.dart';
 import 'package:myapp/model/validationModel.dart';
 import 'package:crypto/crypto.dart';
 
@@ -56,8 +57,8 @@ class FormProvider extends ChangeNotifier {
       });
 
       return true;
-    } catch (e) {
-      return e;
+    } on FirebaseAuthException  catch (e) {
+      return e.code.toString();
     }
   }
 
@@ -79,8 +80,8 @@ class FormProvider extends ChangeNotifier {
       if (userData != null) {
         return true;
       }
-    } catch (e) {
-      return e;
+    }on FirebaseAuthException  catch (e) {
+      return e.code.toString();
     }
   }
 
@@ -113,8 +114,23 @@ class FormProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  bool get validate {
-    return _email.value != null && _password.value != null;
+  bool   validate  ( AuthMode authMode) {
+    if (authMode == AuthMode.Login) {
+      if (_email.value != null && _password.value != null) {
+        return true;
+      } else {
+        return false;
+      }
+    } else {
+      if (_email.value != null &&
+          _password.value != null &&
+          _name.value != null) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+
   }
 }
 

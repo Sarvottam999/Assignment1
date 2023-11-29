@@ -23,6 +23,7 @@ class _AuthScreenState extends State<AuthScreen> {
 
   AuthMode _authMode = AuthMode.Signup;
 
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -115,10 +116,20 @@ class _AuthScreenState extends State<AuthScreen> {
                                 builder: (context, model, child) {
                               return GestureDetector(
                                 onTap: () {
-                                  if (_formProvider.validate) {
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
                                     if (_authMode == AuthMode.Signup) {
+                                  if (_formProvider.validate(AuthMode.Signup)) {
+
                                       model.signUp().then((value) {
+                                        if (_formKey.currentState != null)
+                                        {_formKey.currentState!.reset();
+}
                                         if (value == true) {
+                                           setState(() {
+                                    _isLoading = false;
+                                  });
                                           Navigator.pushReplacement(
                                             context,
                                             MaterialPageRoute(
@@ -127,12 +138,26 @@ class _AuthScreenState extends State<AuthScreen> {
                                             ),
                                           );
                                         } else {
+                                           setState(() {
+                                    _isLoading = false;
+                                  });
+
                                           CustomAlertBox(
                                               context, value.toString());
                                         }
                                       });
+                                   
+                                  }
                                     } else {
+                                      if (_formProvider.validate(AuthMode.Login)) {
+                                         setState(() {
+                                    _isLoading = true;
+                                  });
                                       model.signIn().then((value) {
+
+                                       if (_formKey.currentState != null)
+                                        {_formKey.currentState!.reset();
+}
                                         if (value == true) {
                                           Navigator.pushReplacement(
                                             context,
@@ -142,13 +167,21 @@ class _AuthScreenState extends State<AuthScreen> {
                                             ),
                                           );
                                         } else {
+                                           setState(() {
+                                    _isLoading = false;
+                                  });
                                         
                                           CustomAlertBox(
-                                              context, value.toString());
+                                              context, "Invalid Credentials");
                                         }
                                       });
                                     }
-                                  }
+                                    }
+
+                                     setState(() {
+                                    _isLoading = false;
+                                  });
+                                  
                                 },
                                 child: Container(
                                   height: 70,
@@ -195,7 +228,16 @@ class _AuthScreenState extends State<AuthScreen> {
                                                   Color(0xffE61D41),
                                               ])),
 
-                                      child: Text(
+                                      child: _isLoading
+                                                    ? Container(
+                                                        width: 24,
+                                                        height: 24,
+                                                        padding: const EdgeInsets.all(2.0),
+                                                        child: const CircularProgressIndicator(
+                                                          color: Colors.white,
+                                                          strokeWidth: 3,
+                                                        )): 
+                                                Text(
                                         _authMode == AuthMode.Signup
                                             ? "Sign Up"
                                             : "Sign In",
@@ -229,6 +271,9 @@ class _AuthScreenState extends State<AuthScreen> {
                                   color: Color.fromARGB(255, 126, 126, 126))),
                           GestureDetector(
                             onTap: () {
+                              if (_formKey.currentState != null)
+                                        {_formKey.currentState!.reset();
+}
                               setState(() {
                                 _authMode = _authMode == AuthMode.Signup
                                     ? AuthMode.Login
