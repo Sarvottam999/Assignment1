@@ -1,0 +1,43 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/material.dart';
+import 'package:myapp/Auth.dart';
+import 'package:myapp/Provider/formProvider.dart';
+import 'package:myapp/SuccessScreen.dart';
+import 'package:provider/provider.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+
+  runApp(ChangeNotifierProvider(
+   create: (_) => FormProvider(), child: MyApp()));
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final formProvider = Provider.of<FormProvider>(context);
+    return MaterialApp(
+      title: 'Starter Page',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+  home:FutureBuilder(future: formProvider.isUserLoggedIn(), builder: (context, snapshot) {
+    if(snapshot.connectionState == ConnectionState.waiting){
+      return Center(child: CircularProgressIndicator());
+    }
+    else if(snapshot.hasData){
+      return snapshot.data as bool   == true? AuthScreen(): AuthScreen();
+    }
+    else{
+      return AuthScreen();
+    }
+  }),
+      
+      //  formProvider.isUserLoggedIn()?         AuthScreen(),
+    );
+
+  }
+}
+
+ 
