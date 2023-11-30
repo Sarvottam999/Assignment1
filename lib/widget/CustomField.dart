@@ -8,20 +8,22 @@ class CustomFormField extends StatefulWidget {
     required this.errorText,
     this.onChanged,
     this.validator,
-    required this.prefixicon
+    required this.prefixicon,
+    required this.obscureText,
   }) : super(key: key);
   final String hintText;
   final String? errorText;
   final Function(String?)? onChanged;
   final String? Function(String?)? validator;
   final Icon? prefixicon;
+  bool obscureText = false;
+
 
   @override
   State<CustomFormField> createState() => _CustomFormFieldState();
 }
 
 class _CustomFormFieldState extends State<CustomFormField> {
-  bool _obscureText = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +33,7 @@ class _CustomFormFieldState extends State<CustomFormField> {
       child: SizedBox(
        
         child: TextFormField(
-          obscureText: _obscureText,
+          obscureText: widget.obscureText,
         
           onChanged: widget.onChanged,
           validator: widget.validator,
@@ -45,10 +47,10 @@ class _CustomFormFieldState extends State<CustomFormField> {
               GestureDetector(
                   onTap: () {
                     setState(() {
-                      _obscureText = !_obscureText;
+                      widget.obscureText = !widget.obscureText;
                     });
                   },
-                  child: Icon(_obscureText?Icons.visibility_off:Icons.visibility, color: Colors.grey,)
+                  child: Icon(widget.obscureText?Icons.visibility_off:Icons.visibility, color: Colors.grey,)
                   
                   ): null ,
           

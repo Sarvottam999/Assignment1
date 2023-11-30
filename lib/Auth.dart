@@ -31,364 +31,356 @@ class _AuthScreenState extends State<AuthScreen> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(),
-        body:  Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15),
-                child: SingleChildScrollView(
+        body: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 15),
+          child: SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                GradientText(
+                  "Symmatric",
+                  style: GoogleFonts.playfairDisplay(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                  gradient: const LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        Color.fromARGB(255, 141, 0, 75),
+                        Color.fromARGB(255, 199, 0, 106),
+                      ]),
+                ),
+                const SizedBox(
+                  height: 11,
+                ),
+                Image.asset(
+                  Assets.logo,
+                  height: 90,
+                  width: 90,
+                ),
+                const SizedBox(
+                  height: 11,
+                ),
+                GradientText(
+                  _authMode == AuthMode.Signup ? "Sign Up" : "Sign In",
+                  style: GoogleFonts.playfairDisplay(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black),
+                  gradient: const LinearGradient(
+                      begin: Alignment.centerLeft,
+                      end: Alignment.centerRight,
+                      colors: [
+                        Color.fromARGB(255, 141, 0, 75),
+                        Color.fromARGB(255, 199, 0, 106),
+                      ]),
+                ),
+                const SizedBox(
+                  height: 18,
+                ),
+                Form(
+                  key: _formKey,
                   child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      GradientText(
-                        "Symmatric",
-                        style: GoogleFonts.playfairDisplay(
-                            fontSize: 30,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
-                        gradient: const LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: [
-                              Color.fromARGB(255, 141, 0, 75),
-                              Color.fromARGB(255, 199, 0, 106),
-                            ]),
-                      ),
-
-                     const  SizedBox(
-                        height: 11,
-                      ),
-
-                      Image.asset(
-                        Assets.logo,
-                        height: 90,
-                        width: 90,
-                      ),
-                     const  SizedBox(
-                        height: 11,
-                      ),
-
-                      GradientText(
-                        _authMode == AuthMode.Signup ? "Sign Up" : "Sign In",
-                        style: GoogleFonts.playfairDisplay(
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black),
-                        gradient: const LinearGradient(
-                            begin: Alignment.centerLeft,
-                            end: Alignment.centerRight,
-                            colors: [
-                              Color.fromARGB(255, 141, 0, 75),
-                              Color.fromARGB(255, 199, 0, 106),
-                            ]),
-                      ),
-                     const  SizedBox(
-                        height: 18,
-                      ),
-
-                      Form(
-                        key: _formKey,
-                        child: Column(
-                          children: [
-                            _authMode == AuthMode.Signup
-                                ? CustomFormField(
-                                    hintText: 'Name',
-                                    prefixicon: Icon(Icons.person_2_outlined,
-                                        color: Colors.grey),
-                                    onChanged: _formProvider.validateName,
-                                    errorText: _formProvider.name.error,
-                                  )
-                                : Container(),
-                            CustomFormField(
-                              hintText: 'Email',
-                              prefixicon:const  Icon(Icons.email_outlined,
+                      _authMode == AuthMode.Signup
+                          ? CustomFormField(
+                              hintText: 'Name',
+                              prefixicon: Icon(Icons.person_2_outlined,
                                   color: Colors.grey),
-                              onChanged: _formProvider.validateEmail,
-                              errorText: _formProvider.email.error,
-                            ),
-                            CustomFormField(
-                              prefixicon:const  Icon(
-                                Icons.lock_outline,
-                                color: Colors.grey,
-                              ),
-                              hintText: 'Password',
-                              onChanged: _formProvider.validatePassword,
-                              errorText: _formProvider.password.error,
-                            ),
-                            Consumer<FormProvider>(
-                                builder: (context, model, child) {
-                              return GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _isLoading = true;
-                                  });
-                                    if (_authMode == AuthMode.Signup) {
-                                  if (_formProvider.validate(AuthMode.Signup)) {
+                              onChanged: _formProvider.validateName,
+                              errorText: _formProvider.name.error,
+                              obscureText: false,
+                            )
+                          : Container(),
+                      CustomFormField(
+                        hintText: 'Email',
+                        prefixicon: const Icon(Icons.email_outlined,
+                            color: Colors.grey),
+                        onChanged: _formProvider.validateEmail,
+                        errorText: _formProvider.email.error,
+                              obscureText: false,
 
-                                      model.signUp().then((value) {
-                                        if (_formKey.currentState != null)
-                                        {_formKey.currentState!.reset();
-}
-                                        if (value == true) {
-                                           setState(() {
-                                    _isLoading = false;
-                                  });
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SuccessScreen(),
-                                            ),
-                                          );
-                                        } else {
-                                           setState(() {
-                                    _isLoading = false;
-                                  });
+                      ),
+                      CustomFormField(
+                        prefixicon: const Icon(
+                          Icons.lock_outline,
+                          color: Colors.grey,
+                        ),
+                        hintText: 'Password',
+                        onChanged: _formProvider.validatePassword,
+                        errorText: _formProvider.password.error,
+                              obscureText: true,
 
-                                          CustomAlertBox(
-                                              context, value.toString());
-                                        }
-                                      });
-                                   
-                                  }
-                                    } else {
-                                      if (_formProvider.validate(AuthMode.Login)) {
-                                         setState(() {
-                                    _isLoading = true;
-                                  });
-                                      model.signIn().then((value) {
+                      ),
+                      Consumer<FormProvider>(builder: (context, model, child) {
+                        return GestureDetector(
+                          onTap: () {
+                            setState(() {
+                              _isLoading = true;
+                            });
+                            if (_authMode == AuthMode.Signup) {
+                              if (_formProvider.validate(AuthMode.Signup)) {
+                                print("+++++++++++++++++++++++++");
 
-                                       if (_formKey.currentState != null)
-                                        {_formKey.currentState!.reset();
-}
-                                        if (value == true) {
-                                          Navigator.pushReplacement(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) =>
-                                                  SuccessScreen(),
-                                            ),
-                                          );
-                                        } else {
-                                           setState(() {
-                                    _isLoading = false;
-                                  });
-                                        
-                                          CustomAlertBox(
-                                              context, "Invalid Credentials");
-                                        }
-                                      });
-                                    }
-                                    }
-
-                                     setState(() {
-                                    _isLoading = false;
-                                  });
-                                  
-                                },
-                                child: Container(
-                                  height: 70,
-                                  width: double.infinity,
-                                  child: Stack(children: [
-                                    Align(
-                                      child: Container(
-                                        alignment: Alignment.bottomCenter,
-
-                                        height: 50,
-                                        width:
-                                            MediaQuery.of(context).size.width -
-                                                40,
-
-                                        decoration: BoxDecoration(
-                                            borderRadius:
-                                                BorderRadius.circular(10),
-                                                border: Border.all(color: const Color.fromARGB(255, 255, 0, 0), width: 2),
-                                            
-                                                ),
-                                        // margin: EdgeInsets.symmetric(horizontal: 10),
-                                        child: const Icon(
-                                          Icons.arrow_forward,
-                                          color: Colors.white,
-                                        ),
+                                model.signUp().then((value) {
+                                  if (value == true) {
+                                    setState(() {
+                                      _formKey.currentState!.reset();
+                                      _isLoading = false;
+                                    });
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SuccessScreen(),
                                       ),
-                                    ),
-                                    Container(
-                                      // margin: EdgeInsets.symmetric(vertical: 8),
-                                      alignment: Alignment.center,
-                                      //  width: double.infinity,
-                                      width: MediaQuery.of(context).size.width -
-                                          40,
+                                    );
+                                  } else {
+                                    setState(() {
+                                      _isLoading = false;
+                                    });
 
-                                      height: 50,
-                                      decoration: BoxDecoration(
-                                          borderRadius:
-                                              BorderRadius.circular(10),
-                                          gradient:const  LinearGradient(
-                                              begin: Alignment.centerLeft,
-                                              end: Alignment.centerRight,
-                                              colors: [
-                                                  Color(0xffEE5738),
-                                                  Color(0xffE61D41),
-                                              ])),
+                                    CustomAlertBox(context, value.toString());
+                                  }
+                                });
+                              }
+                            } else {
+                              if (_formProvider.validate(AuthMode.Login)) {
+                                setState(() {
+                                  _isLoading = true;
+                                });
 
-                                      child: _isLoading
-                                                    ? Container(
-                                                        width: 24,
-                                                        height: 24,
-                                                        padding: const EdgeInsets.all(2.0),
-                                                        child: const CircularProgressIndicator(
-                                                          color: Colors.white,
-                                                          strokeWidth: 3,
-                                                        )): 
-                                                Text(
+                                 
+
+
+
+                                model.signIn().then((value) {
+                                  
+                                  if (value == true) {
+                                    setState(() {
+                                  _formKey.currentState!.reset();
+                                    _isLoading = false;
+                                  });
+                                    Navigator.pushReplacement(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) => SuccessScreen(),
+                                      ),
+                                    );
+                                  } else {
+                                    setState(() {
+                                      _isLoading = false;
+                                    }); 
+
+                                    CustomAlertBox(
+                                        context, "Invalid Credentials");
+                                  }
+                                });
+                              }
+                            }
+                          },
+                          child: Container(
+                            height: 70,
+                            width: double.infinity,
+                            child: Stack(children: [
+                              Align(
+                                child: Container(
+                                  alignment: Alignment.bottomCenter,
+
+                                  height: 50,
+                                  width: MediaQuery.of(context).size.width - 40,
+
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    border: Border.all(
+                                        color: const Color.fromARGB(
+                                            255, 255, 0, 0),
+                                        width: 2),
+                                  ),
+                                  // margin: EdgeInsets.symmetric(horizontal: 10),
+                                  child: const Icon(
+                                    Icons.arrow_forward,
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                // margin: EdgeInsets.symmetric(vertical: 8),
+                                alignment: Alignment.center,
+                                //  width: double.infinity,
+                                width: MediaQuery.of(context).size.width - 40,
+
+                                height: 50,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    gradient: const LinearGradient(
+                                        begin: Alignment.centerLeft,
+                                        end: Alignment.centerRight,
+                                        colors: [
+                                          Color(0xffEE5738),
+                                          Color(0xffE61D41),
+                                        ])),
+
+                                child: _isLoading
+                                    ? Container(
+                                        width: 24,
+                                        height: 24,
+                                        padding: const EdgeInsets.all(2.0),
+                                        child: const CircularProgressIndicator(
+                                          color: Colors.white,
+                                          strokeWidth: 3,
+                                        ))
+                                    : Text(
                                         _authMode == AuthMode.Signup
                                             ? "Sign Up"
                                             : "Sign In",
-                                        style:const  TextStyle(
+                                        style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 17,
                                             fontWeight: FontWeight.bold),
                                       ),
-                                    ),
-                                  ]),
-                                ),
-                              );
-
-                        
-                            })
-                          ],
-                        ),
-                      ),
-
-
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                              _authMode == AuthMode.Signup
-                                  ? "Aready have an account? "
-                                  : "DId you have an account? ",
-                              style:const  TextStyle(
-                                  // fontSize: 20,
-                                  color: Color.fromARGB(255, 126, 126, 126))),
-                          GestureDetector(
-                            onTap: () {
-                              if (_formKey.currentState != null)
-                                        {_formKey.currentState!.reset();
-}
-                              setState(() {
-                                _authMode = _authMode == AuthMode.Signup
-                                    ? AuthMode.Login
-                                    : AuthMode.Signup;
-                              });
-                            },
-                            child: Text(
-                              _authMode == AuthMode.Signup
-                                  ? " LogIn"
-                                  : " SignUp",
-                              style:const  TextStyle(
-                                  // fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                  color: Color.fromARGB(255, 255, 0, 0)),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20,  ),
-
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Container(
-                            height: 1,
-                            width: 100,
-                            decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.centerRight,
-                                  end: Alignment.centerLeft,
-                                  colors: [
-                                    Colors.red,
-                                    Color.fromARGB(0, 255, 255, 255),
-                                  ]),
-                              // borderRadius: BorderRadius.circular(10)
-                            ),
-                          ),
-                          Text(
-                            _authMode == AuthMode.Signup
-                                ? "  Or Sign Up with  "
-                                : "  Or Sign In with  ",
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black),
-                          ),
-                          Container(
-                            height: 1,
-                            width: 100,
-                            decoration: const BoxDecoration(
-                              gradient: LinearGradient(
-                                  begin: Alignment.centerLeft,
-                                  end: Alignment.centerRight,
-                                  colors: [
-                                    Colors.red,
-                                    Color.fromARGB(0, 255, 255, 255),
-                                  ]),
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 20,  ),
-
-                      Container(
-                        padding: EdgeInsets.symmetric(horizontal: 10),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                            border: Border.all(
-                                color: Color.fromARGB(255, 214, 214, 214),
-                                width: 2)),
-                        height: 40,
-                        width: 120,
-                        child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Image.asset(
-                                Assets.Googlelogo,
-                                height: 25,
-                                width: 25,
                               ),
-                              const SizedBox(
-                                width: 20,
-                              ),
-                              const Text(
-                                "Google",
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 0, 0, 0)),
-                              )
                             ]),
-                      ),
-                      SizedBox(height: 30,  ),
-
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "By signing up you agree to our",
-                            style: TextStyle(
-                                // fontSize: 10,
-                                color: Color.fromARGB(255, 126, 126, 126)),
                           ),
-                          Text(
-                            " Terms & Conditions",
-                            style: TextStyle(
-                                // fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                                color: Color.fromARGB(255, 255, 0, 0)),
-                          ),
-                        ],
-                      )
+                        );
+                      })
                     ],
                   ),
                 ),
-              ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                        _authMode == AuthMode.Signup
+                            ? "Aready have an account? "
+                            : "DId you have an account? ",
+                        style: const TextStyle(
+                            // fontSize: 20,
+                            color: Color.fromARGB(255, 126, 126, 126))),
+                    GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _isLoading = false;
+                        });
+
+                        if (_formKey.currentState != null) {
+                          _formKey.currentState!.reset();
+                        }
+                        setState(() {
+                          _authMode = _authMode == AuthMode.Signup
+                              ? AuthMode.Login
+                              : AuthMode.Signup;
+                        });
+                      },
+                      child: Text(
+                        _authMode == AuthMode.Signup ? " LogIn" : " SignUp",
+                        style: const TextStyle(
+                            // fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromARGB(255, 255, 0, 0)),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisSize: MainAxisSize.min,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      height: 1,
+                      width: 100,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.centerRight,
+                            end: Alignment.centerLeft,
+                            colors: [
+                              Colors.red,
+                              Color.fromARGB(0, 255, 255, 255),
+                            ]),
+                        // borderRadius: BorderRadius.circular(10)
+                      ),
+                    ),
+                    Text(
+                      _authMode == AuthMode.Signup
+                          ? "  Or Sign Up with  "
+                          : "  Or Sign In with  ",
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.black),
+                    ),
+                    Container(
+                      height: 1,
+                      width: 100,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              Colors.red,
+                              Color.fromARGB(0, 255, 255, 255),
+                            ]),
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height:  5,
+                ),
+                Container(
+                  padding: EdgeInsets.symmetric(horizontal: 10),
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                          color: Color.fromARGB(255, 214, 214, 214), width: 2)),
+                  height: 40,
+                  width: 120,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Image.asset(
+                          Assets.Googlelogo,
+                          height: 25,
+                          width: 25,
+                        ),
+                        const SizedBox(
+                          width: 20,
+                        ),
+                        const Text(
+                          "Google",
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(255, 0, 0, 0)),
+                        )
+                      ]),
+                ),
+                SizedBox(
+                  height: 20,
+                ),
+                const Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "By signing up you agree to our",
+                      style: TextStyle(
+                          // fontSize: 10,
+                          color: Color.fromARGB(255, 126, 126, 126)),
+                    ),
+                    Text(
+                      " Terms & Conditions",
+                      style: TextStyle(
+                          // fontSize: 10,
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromARGB(255, 255, 0, 0)),
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+        ),
       ),
     );
   }
